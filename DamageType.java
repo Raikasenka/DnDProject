@@ -1,0 +1,11 @@
+enum DamageType{
+	FIRE,
+	COLD,
+	POISON,
+	ACID,
+	SHOCK,
+	RADIANT,
+	NECROTIC,
+	FORCE,
+	PSYCHIC;
+}
