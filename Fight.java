@@ -53,7 +53,7 @@ public class Fight{
 		System.out.print("What do you wish to do?\n1. "+Constants.ATTACK+"\n2. "+Constants.SKILL+"\n3. "+Constants.ITEM+"\n4. "+Constants.FLEE+"\nSelection>");
 	}
 	public void notAvailableMessage(){
-		System.out.println("This function is not available at the moment");
+		System.out.println(Constants.NOTAVAILABLE);
 	}
 	public int optionChoice(){
 		Scanner s=new Scanner(System.in);
