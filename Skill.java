@@ -2,8 +2,8 @@ enum Skill{
 	BITE("Bite",1,6,1,"The enemy bites the chosen target for 1d6+1 damage"),
 	JAVELIN("Javelin",1,6,2,"The enemy directly thrusts their spear or throw it at a chosen target");
 
-	private String name,description;
-	private int diceRolls,diceRolled,baseDamage,bonusDiceRolls,bonusDiceRolled,bonusBaseDamage;
+	private final String name,description;
+	private final int diceRolls,diceRolled,baseDamage,bonusDiceRolls,bonusDiceRolled,bonusBaseDamage;
 	
 	Skill(String name,int diceRolls, int diceRolled,int baseDamage,String description){
 		this.name=name;
