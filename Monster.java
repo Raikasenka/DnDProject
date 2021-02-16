@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.stream.*;
 import java.nio.file.*;
-import java.io.File;
 public class Monster{
 	
 	//Private variable declarations
@@ -53,7 +52,7 @@ public class Monster{
 			maxHP=(int)(diceRolled*(((hitDie+1)/2.0)+conMod));
 			currentHP=maxHP;
 
-			skillList=new ArrayList<Skill>();
+			skillList= new ArrayList<>();
 		}
 		public String getType(){return type;}
 
@@ -67,7 +66,14 @@ public class Monster{
 		public int getINT(){return intelligence;}
 		public int getWIS(){return wisdom;}
 		public int getCHR(){return charisma;}
-
+		
+		public int getStrMod(){return strMod;}
+		public int getDexMod(){return dexMod;}
+		public int getConMod(){return conMod;}
+		public int getIntMod(){return intMod;}
+		public int getWisMod(){return wisMod;}
+		public int getChrMod(){return chrMod;}
+		
 		public int getFireState(){return damages.get(DamageType.FIRE).ordinal();}
 		public int getColdState(){return damages.get(DamageType.COLD).ordinal();}
 		public int getPoisonState(){return damages.get(DamageType.POISON).ordinal();}
@@ -81,9 +87,9 @@ public class Monster{
 		public int getMaxHP(){return maxHP;}
 		public int getCurrentHP(){return currentHP;}
 		public void takeDamage(int damage){currentHP-=damage;}
-		public void heal(int life){currentHP+=life;}
+		public void heal(int life){currentHP=Math.min(maxHP,currentHP+life);}
 
-		public HashMap getMap(){return damages;}
+		public HashMap<DamageType, State> getMap(){return damages;}
 		public ArrayList<Skill> getSkillList(){return skillList;}
 
 		/*Multiple overloads will be required, will ask for a MonsterList of a specific area and will take that as an input
@@ -110,15 +116,15 @@ public class Monster{
 				//Damage types and states association
 				DamageType[] damageTypes=DamageType.values();
 				State[] states=State.values();
-				for(int i=0;i<damageTypes.length;i++){
-					monster.getMap().put(damageTypes[i],states[s.nextInt()]);
+				for (DamageType damageType : damageTypes) {
+					monster.getMap().put(damageType, states[s.nextInt()]);
 				}
 				//Skill list assigning
 				String skillStr=s.next();
 				String[] skillNumbers=skillStr.split("-");
 				Skill[] skills=Skill.values();
-				for(int i=0;i<skillNumbers.length;i++){
-					int skill= Integer.parseInt(skillNumbers[i]);
+				for (String skillNumber : skillNumbers) {
+					int skill = Integer.parseInt(skillNumber);
 					monster.getSkillList().add(skills[skill]);
 				}
 				s=new Scanner("");
@@ -128,7 +134,5 @@ public class Monster{
 			return null;//If ya down here ya fucked up somewhere
 		}
 	
-		public boolean isAlive(){
-		return this.currentHP>0?true:false;
-	}
+		public boolean isAlive(){return this.currentHP>0;}
 }

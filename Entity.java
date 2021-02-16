@@ -1,5 +1,4 @@
 import java.util.*;
-import java.nio.file.Files;
 import java.io.*;
 enum Profession{
 	BARBARIAN("Barbarian",12),
@@ -41,6 +40,7 @@ public class Entity{
 		private int fireState,coldState,poisonState,acidState,shockState,radiantState,necroticState,forceState,psychicState;
 		//Itemization
 		private Weapon equippedWeapon;
+
 	//End of variable declarations
 
 	//Beginning of constructors
@@ -57,7 +57,8 @@ public class Entity{
 				int constitution,
 				int intelligence,
 				int wisdom,
-				int charisma){
+				int charisma,
+				String skillString){
 
 					//Social Stats
 						this.name=name;
@@ -86,6 +87,17 @@ public class Entity{
 
 					maxHP=profession.getHD()+((level-1)*(profession.getHD()/2+1))+(level*conMod);
 					currentHP=maxHP;
+					
+					skillList=new ArrayList<>();
+					if (!skillString.isEmpty()) {
+						String[] skillNumbers = skillString.split("-");
+						Skill[] skills = Skill.values();
+						
+						for (String skillNumber : skillNumbers) {
+							int skill = Integer.parseInt(skillNumber);
+							skillList.add(skills[skill]);
+						}
+					}
 				}
 
 		//Instant constructor for "Boss" type monster like Tiamat or such
@@ -111,7 +123,8 @@ public class Entity{
 				int radiantState,
 				int necroticState,
 				int forceState,
-				int psychicState){
+				int psychicState,
+				String skillString){
 
 					//Social Stats
 						this.name=name;
@@ -167,6 +180,13 @@ public class Entity{
 				public int getINT(){return intelligence;}
 				public int getWIS(){return wisdom;}
 				public int getCHR(){return charisma;}
+			//Entity Attribute Modifiers
+				public int getStrMod(){return strMod;}
+				public int getDexMod(){return dexMod;}
+				public int getConMod(){return conMod;}
+				public int getIntMod(){return intMod;}
+				public int getWisMod(){return wisMod;}
+				public int getChrMod(){return chrMod;}
 			//Damage States
 				public int getFireState(){return damages.get(DamageType.FIRE).ordinal();}
 				public int getColdState(){return damages.get(DamageType.COLD).ordinal();}
@@ -183,6 +203,8 @@ public class Entity{
 				public Weapon getEquippedWeapon(){return equippedWeapon;}
 			//HP related methods
 				public int getCurrentHP(){return currentHP;}
+			//SkillList getter
+				public ArrayList<Skill> getSkillList(){return skillList;}
 		//End of getters
 		
 		//Start of setters
@@ -192,12 +214,12 @@ public class Entity{
 				public void setRace(String race){this.race=race;}
 				public void setLevel(int level){this.level=level;}
 			//Entity Attributes
-				public void setSTR(int value){this.strength=strength;}
-				public void setDEX(int value){this.dexterity=dexterity;}
-				public void setCON(int value){this.constitution=constitution;}
-				public void setINT(int value){this.intelligence=intelligence;}
-				public void setWIS(int value){this.wisdom=wisdom;}
-				public void setCHR(int value){this.charisma=charisma;}
+				public void setSTR(int value){this.strength=value;}
+				public void setDEX(int value){this.dexterity=value;}
+				public void setCON(int value){this.constitution=value;}
+				public void setINT(int value){this.intelligence=value;}
+				public void setWIS(int value){this.wisdom=value;}
+				public void setCHR(int value){this.charisma=value;}
 			//Damage States
 				public void setFireState(int value){this.damages.put(DamageType.FIRE,State.values()[value]);}
 				public void setColdState(int value){this.damages.put(DamageType.COLD,State.values()[value]);}
@@ -214,7 +236,7 @@ public class Entity{
 				public void setEquippedWeapon(Weapon weapon){this.equippedWeapon=weapon;}
 			//HP Related methods
 			public void takeDamage(int damage){currentHP-=damage;}
-			public void heal(int life){currentHP+=life;}
+			public void heal(int life){currentHP=Math.min(maxHP,currentHP+life);}
 		//End of setters
 		
 		//Methods to list out Entity values in various ways
@@ -266,10 +288,7 @@ public class Entity{
 				return chart;
 			}
 			private String starString(int value){
-				String str="";
-				for (int i=0;i<value;i++){
-					str+="*";
-				}return str;
+				return "*".repeat(Math.max(0, value));
 			}
 		//End of stat listing methods
 
@@ -287,16 +306,16 @@ public class Entity{
 				s=new Scanner("");
 				s.close();
 				File file=new File("UserSaves/player"+saveFile+".dat");
-				FileWriter fw=new FileWriter(file);
 				String data=entityToString();
 				file.getParentFile().mkdirs();
 				file.createNewFile();
+				FileWriter fw=new FileWriter(file);
 				fw.write(data);
 				fw.close();
 			}catch(Exception e){System.out.println(e.getMessage());}
 		}
 
-		public static Entity load() throws Exception{
+		public static Entity load(){
 			try{
 				Scanner s=new Scanner(System.in);
 				System.out.print("Which file do you wish to load?(1-10)>");
@@ -341,7 +360,7 @@ public class Entity{
 					case "Wizard":
 					profession=Profession.WIZARD;break;
 					default:
-						System.out.println("There was an error in file formatting to aquire the Profession\nTerminating...");
+						System.out.println("There was an error in file formatting to acquire the Profession\nTerminating...");
 						s=new Scanner("");
 						s.close();
 						System.exit(-1);
@@ -353,14 +372,18 @@ public class Entity{
 				int constitution=s.nextInt();
 				int wisdom=s.nextInt();
 				int charisma=s.nextInt();
-
-				Entity entity=new Entity(name,age,race,level,profession,
-					strength,dexterity,constitution,intelligence,wisdom,charisma);
-
+				
 				DamageType[] damageTypes=DamageType.values();
 				State[] states=State.values();
+				int[] types=new int[damageTypes.length];
+				for (int i=0;i<types.length;i++) {
+					types[i]=s.nextInt();
+				}
+				String skillString=s.next();
+				Entity entity=new Entity(name,age,race,level,profession,
+					strength,dexterity,constitution,intelligence,wisdom,charisma,skillString);
 				for(int i=0;i<damageTypes.length;i++){
-					entity.getMap().put(damageTypes[i],states[s.nextInt()]);
+					entity.getMap().put(damageTypes[i],states[types[i]]);
 				}
 				s=new Scanner("");
 				s.close();
@@ -372,32 +395,35 @@ public class Entity{
 		}
 		
 		public String entityToString(){
-			String data="";
-				data+=name+",";
-				data+=age+",";
-				data+=race+",";
-				data+=level+",";
-				data+=profession.getName()+",";
-				data+=strength+",";
-				data+=dexterity+",";
-				data+=constitution+",";
-				data+=intelligence+",";
-				data+=wisdom+",";
-				data+=charisma+",";
+			StringBuilder data= new StringBuilder();
+				data.append(name).append(",");
+				data.append(age).append(",");
+				data.append(race).append(",");
+				data.append(level).append(",");
+				data.append(profession.getName()).append(",");
+				data.append(strength).append(",");
+				data.append(dexterity).append(",");
+				data.append(constitution).append(",");
+				data.append(intelligence).append(",");
+				data.append(wisdom).append(",");
+				data.append(charisma).append(",");
 				DamageType[] damageTypes=DamageType.values();
-				for(int i=0;i<damageTypes.length;i++){
-					data+=damages.get(damageTypes[i]).ordinal()+",";
+				for (DamageType damageType : damageTypes) {
+					data.append(damages.get(damageType).ordinal()).append(",");
+				}
+				if(!skillList.isEmpty()){
+					for (Skill skill : skillList) {
+						data.append(skill.ordinal()).append("-");
+					}
+				}else{
+					data.append("\"\",");
 				}
 				return data.substring(0,data.length()-1);
 		}
 
-		public int attack(){
-			return this.equippedWeapon.attack();
-		}
+		public int attack(){return this.equippedWeapon.attack();}
 		
-		public boolean isAlive(){
-					return this.currentHP>0?true:false;
-		}
+		public boolean isAlive(){return this.currentHP>0;}
 	//End of public methods
 
 }
