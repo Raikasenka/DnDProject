@@ -22,45 +22,44 @@ public class Weapon{
 		this.diceRolled=diceRolled;
 		this.baseDamage=baseDamage;
 		this.damageType=damageType;
+		this.durability=Integer.MAX_VALUE;
 	}
 
 	//This will go unused as long as there is no getter for opponent details
 	public double calculateDamageRatio(String opponentArmorType){
 		double ratio=1;
-		if(this.damageType.equals("Bludgeoning")){
-			switch(opponentArmorType){
-				case "Skin":
-					ratio=2/3;break;
-				case "Light Armor":
-					ratio=3/2;break;
-				case "Heavy Armor":
-					ratio=1;break;
-			}
-		}
-
-		else if(this.damageType.equals("Piercing")){
-			switch(opponentArmorType){
-				case "Skin":
-					ratio=1;break;
-				case "Light Armor":
-					ratio=2/3;break;
-				case "Heavy Armor":
-					ratio=3/2;break;
-			}
-		}
-
-		else if(this.damageType.equals("Slashing")){
-			switch(opponentArmorType){
-				case "Skin":
-					ratio=3/2;break;
-				case "Light Armor":
-					ratio=1;break;
-				case "Heavy Armor":
-					ratio=2/3;break;
-			}
-		}
-		else{
-			ratio=0;
+		switch (this.damageType){
+			case "Bludgeoning":
+				switch (opponentArmorType){
+					case "Skin":
+						ratio=2/3d;break;
+					case "Light Armor":
+						ratio=3/2d;break;
+					case "Heavy Armor":
+						ratio=1;break;
+				}break;
+				
+			case "Piercing":
+				switch (opponentArmorType){
+					case "Skin":
+						ratio=1;break;
+					case "Light Armor":
+						ratio=2/3d;break;
+					case "Heavy Armor":
+						ratio=3/2d;break;
+				}break;
+				
+			case "Slashing":
+				switch (opponentArmorType){
+					case "Skin":
+						ratio=3/2d;break;
+					case "Light Armor":
+						ratio=1;break;
+					case "Heavy Armor":
+						ratio=2/3d;break;
+				}break;
+			default:
+				ratio=0;break;
 		}return ratio;
 	}
 

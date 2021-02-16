@@ -7,5 +7,5 @@ enum DamageType{
 	RADIANT,
 	NECROTIC,
 	FORCE,
-	PSYCHIC;
+	PSYCHIC
 }
