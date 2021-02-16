@@ -5,13 +5,11 @@ import java.io.File;
 public class Monster{
 	
 	//Private variable declarations
-			
 		private String type; private int hitDie,diceRolled,maxHP,currentHP,pageNumber;
 		private int strength,dexterity,intelligence,constitution,wisdom,charisma;
 		private int strMod,dexMod,intMod,conMod,wisMod,chrMod;
 		private HashMap<DamageType, State> damages;
 		private ArrayList<Skill> skillList;
-
 	//End of private variable declarations
 
 	Monster(
@@ -28,32 +26,27 @@ public class Monster{
 		
 		int pageNumber){
 
-			/*Social Stats*/
-			//************************\\
+			//Social Stats
 				this.type=type;
 				this.diceRolled=diceRolled;
 				this.hitDie=hitDie;
-			//\\**********************//
 
-			/*Core Stats*/
-			//****************************\\
+			//Core Stats
 				this.strength=strength;
 				this.dexterity=dexterity;
 				this.constitution=constitution;
 				this.intelligence=intelligence;
 				this.wisdom=wisdom;
 				this.charisma=charisma;
-			//\\**************************//
 
-			/*CoreModifiers*/
-			//********************************************\\
+			//CoreModifiers
 				strMod=(int)Math.floor((strength-10)/2.0);
 				dexMod=(int)Math.floor((dexterity-10)/2.0);
 				intMod=(int)Math.floor((intelligence-10)/2.0);
 				conMod=(int)Math.floor((constitution-10)/2.0);
 				wisMod=(int)Math.floor((wisdom-10)/2.0);
 				chrMod=(int)Math.floor((charisma-10)/2.0);
-			//\\******************************************//
+
 				damages=new HashMap<DamageType,State>();
 				this.pageNumber=pageNumber;
 

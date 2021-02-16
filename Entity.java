@@ -29,26 +29,22 @@ enum Profession{
 public class Entity{
 	
 	//Private variable declarations
-
-		//						 (												Social stats												)
+		//Social stats
 		private String name,race; private Profession profession;private int age,level,maxHP,currentHP;
-		//					(													Core Stats												)
+		//Core Stats
 		private int strength,dexterity,intelligence,constitution,wisdom,charisma;
-		//					(							Core Modifiers						 )
+		//Core Modifiers
 		private int strMod,dexMod,intMod,conMod,wisMod,chrMod;
-		//					(		Damage states HashMap		)
+		//Damage states HashMap
 		private HashMap<DamageType,State>damages;
-		//					(																			 			HashMap Values																						 )
+		//HashMap Values
 		private int fireState,coldState,poisonState,acidState,shockState,radiantState,necroticState,forceState,psychicState;
-		//(Itemization)
+		//Itemization
 		private Weapon equippedWeapon;
-
 	//End of variable declarations
 
 	//Beginning of constructors
-
 		//Regular constructor for user save loads
-
 				Entity(
 				String name,
 				int age,
@@ -63,34 +59,29 @@ public class Entity{
 				int wisdom,
 				int charisma){
 
-					/*Social Stats*/
-					//************************\\
+					//Social Stats
 						this.name=name;
 						this.age=age;
 						this.race=race;
 						this.level=level;
 						this.profession=profession;
-					//\\**********************//
 
-					/*Core Stats*/
-					//****************************\\
+					//Core Stats
 						this.strength=strength;
 						this.dexterity=dexterity;
 						this.intelligence=intelligence;
 						this.constitution=constitution;
 						this.wisdom=wisdom;
 						this.charisma=charisma;
-					//\\**************************//
 
-					/*CoreModifiers*/
-					//********************************************\\
+					//CoreModifiers
 						strMod=(int)Math.floor((strength-10)/2.0);
 						dexMod=(int)Math.floor((dexterity-10)/2.0);
 						intMod=(int)Math.floor((intelligence-10)/2.0);
 						conMod=(int)Math.floor((constitution-10)/2.0);
 						wisMod=(int)Math.floor((wisdom-10)/2.0);
 						chrMod=(int)Math.floor((charisma-10)/2.0);
-					//\\******************************************//
+
 						damages=new HashMap<DamageType,State>();
 
 					maxHP=profession.getHD()+((level-1)*(profession.getHD()/2+1))+(level*conMod);
@@ -98,7 +89,6 @@ public class Entity{
 				}
 
 		//Instant constructor for "Boss" type monster like Tiamat or such
-
 			Entity(
 				String name,
 				int age,
@@ -123,34 +113,29 @@ public class Entity{
 				int forceState,
 				int psychicState){
 
-					/*Social Stats*/
-					//************************\\
+					//Social Stats
 						this.name=name;
 						this.age=age;
 						this.race=race;
 						this.level=level;
 						this.profession=profession;
-					//\\**********************//
 
-					/*Core Stats*/
-					//****************************\\
+					//Core Stats
 						this.strength=strength;
 						this.dexterity=dexterity;
 						this.intelligence=intelligence;
 						this.constitution=constitution;
 						this.wisdom=wisdom;
 						this.charisma=charisma;
-					//\\**************************//
 
-					/*CoreModifiers*/
-					//********************************************\\
+					//CoreModifiers
 						strMod=(int)Math.floor((strength-10)/2.0);
 						dexMod=(int)Math.floor((dexterity-10)/2.0);
 						intMod=(int)Math.floor((intelligence-10)/2.0);
 						conMod=(int)Math.floor((constitution-10)/2.0);
 						wisMod=(int)Math.floor((wisdom-10)/2.0);
 						chrMod=(int)Math.floor((charisma-10)/2.0);
-					//\\******************************************//
+
 						damages=new HashMap<DamageType,State>();
 						State[] states=State.values();
 						damages.put(DamageType.FIRE,states[fireState]);
@@ -166,7 +151,6 @@ public class Entity{
 					maxHP=profession.getHD()+((level-1)*(profession.getHD()/2+1))+(level*conMod);
 					currentHP=maxHP;
 			}
-
 	//End of constructor
 
 	//Beginning of public methods
@@ -287,7 +271,6 @@ public class Entity{
 					str+="*";
 				}return str;
 			}
-
 		//End of stat listing methods
 
 		public void save(){
